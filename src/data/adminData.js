@@ -1,0 +1,232 @@
+export const adminBookings = [
+  {
+    id: "DG-1008",
+    customer: "Amara Okafor",
+    email: "amara.okafor@email.com",
+    phone: "+234 803 555 0198",
+    event: "Wedding Reception",
+    date: "2026-09-05",
+    guests: 350,
+    package: "Diamond Celebration",
+    status: "confirmed",
+    created: "2026-08-22",
+    notes:
+      "Traditional and white wedding reception. Décor access required from 8 AM.",
+  },
+  {
+    id: "DG-1009",
+    customer: "Brightfield Consulting",
+    email: "events@brightfield.ng",
+    phone: "+234 809 201 4410",
+    event: "Corporate Event",
+    date: "2026-09-19",
+    guests: 300,
+    package: "Corporate Classic",
+    status: "pending",
+    created: "2026-08-25",
+    notes: "Annual strategy summit with theatre seating and a stage setup.",
+  },
+  {
+    id: "DG-1010",
+    customer: "Ifeoma Nwosu",
+    email: "ifeoma.nwosu@email.com",
+    phone: "+234 806 913 3240",
+    event: "Birthday Celebration",
+    date: "2026-09-12",
+    guests: 200,
+    package: "Gold Gathering",
+    status: "confirmed",
+    created: "2026-08-26",
+    notes: "50th birthday dinner and live band performance.",
+  },
+  {
+    id: "DG-1011",
+    customer: "Tobi Adeyemi",
+    email: "tobi.a@email.com",
+    phone: "+234 802 746 8819",
+    event: "Engagement Party",
+    date: "2026-10-03",
+    guests: 120,
+    package: "Gold Gathering",
+    status: "pending",
+    created: "2026-08-27",
+    notes: "Evening celebration. Client requested a cocktail-style setup.",
+  },
+  {
+    id: "DG-1006",
+    customer: "The Coker Family",
+    email: "cokerfamily@email.com",
+    phone: "+234 805 499 1277",
+    event: "Naming Ceremony",
+    date: "2026-08-16",
+    guests: 180,
+    package: "Gold Gathering",
+    status: "completed",
+    created: "2026-07-19",
+    notes: "Completed successfully.",
+  },
+  {
+    id: "DG-1005",
+    customer: "Kemi Philips",
+    email: "kemi.philips@email.com",
+    phone: "+234 701 252 2308",
+    event: "Product Launch",
+    date: "2026-08-09",
+    guests: 250,
+    package: "Corporate Classic",
+    status: "rejected",
+    created: "2026-07-15",
+    notes: "Date was no longer available when the request was reviewed.",
+  },
+];
+export const adminAvailability = {
+  "2026-08-30": "pending",
+  "2026-09-05": "booked",
+  "2026-09-10": "pending",
+  "2026-09-12": "booked",
+  "2026-09-19": "pending",
+  "2026-10-03": "pending",
+  "2026-10-10": "blocked",
+  "2026-10-17": "booked",
+};
+export const adminPackages = [
+  {
+    id: "pkg-1",
+    name: "Gold Gathering",
+    description:
+      "A flexible, elegant package for intimate celebrations and social events.",
+    price: "₦850,000",
+    features: ["Main hall", "Standard seating", "Basic sound system"],
+    active: true,
+    popular: false,
+  },
+  {
+    id: "pkg-2",
+    name: "Diamond Celebration",
+    description:
+      "Our complete premium experience for grand weddings and landmark occasions.",
+    price: "₦1,500,000",
+    features: [
+      "Main hall",
+      "Premium seating",
+      "Sound & lighting",
+      "Bridal suite",
+    ],
+    active: true,
+    popular: true,
+  },
+  {
+    id: "pkg-3",
+    name: "Corporate Classic",
+    description:
+      "A practical, polished setup for conferences, launches, and team events.",
+    price: "Contact us",
+    features: ["Theatre seating", "Projector screen", "PA system"],
+    active: true,
+    popular: false,
+  },
+];
+export const adminGallery = [
+  {
+    id: "gallery-1",
+    title: "The Grand Auditorium",
+    category: "Venue",
+    image: "/Auditorium.jpg",
+    published: true,
+  },
+  {
+    id: "gallery-2",
+    title: "Wedding Reception Setup",
+    category: "Weddings",
+    image: "/event-hall.jpg",
+    published: true,
+  },
+  {
+    id: "gallery-3",
+    title: "Premium Hall Detail",
+    category: "Celebrations",
+    image: "/Auditorium-4.jpg",
+    published: true,
+  },
+  {
+    id: "gallery-4",
+    title: "Corporate Gathering",
+    category: "Corporate",
+    image: "/images.jpg",
+    published: false,
+  },
+];
+export const adminTestimonials = [
+  {
+    id: "test-1",
+    name: "Amara Okafor",
+    event: "Wedding Reception",
+    text: "D Gold gave us a beautiful, seamless celebration. The team was attentive from start to finish.",
+    rating: 5,
+    published: true,
+  },
+  {
+    id: "test-2",
+    name: "Chinedu Eze",
+    event: "Corporate Event",
+    text: "The venue was polished, organised and perfect for our company event.",
+    rating: 5,
+    published: true,
+  },
+  {
+    id: "test-3",
+    name: "Ifeoma Nwosu",
+    event: "Birthday Celebration",
+    text: "Every guest commented on how lovely the venue felt.",
+    rating: 4,
+    published: false,
+  },
+];
+export const adminFaqs = [
+  {
+    id: "faq-1",
+    question: "How many guests can D Gold Event Centre accommodate?",
+    answer:
+      "Our main auditorium accommodates up to 500 guests, depending on your preferred event setup.",
+    published: true,
+  },
+  {
+    id: "faq-2",
+    question: "Can I bring my own decorator?",
+    answer:
+      "Yes. We work with external decorators, subject to our venue access and safety guidelines.",
+    published: true,
+  },
+  {
+    id: "faq-3",
+    question: "Is parking available?",
+    answer: "Yes, the venue provides on-site parking for guests and vendors.",
+    published: true,
+  },
+];
+export const defaultWebsiteContent = {
+  hero: {
+    heading: "Celebrate beautifully at D Gold",
+    text: "A refined event venue in Egbeda, Lagos for moments worth remembering.",
+    cta: "Book the Venue",
+  },
+  about: {
+    heading: "Made for memorable occasions",
+    description:
+      "D Gold Event Centre is a versatile, welcoming venue designed for weddings, celebrations and corporate gatherings.",
+    image: "/event-hall.jpg",
+  },
+  statistics: {
+    capacity: "500 Guests",
+    events: "Weddings, celebrations & corporate events",
+    setup: "Flexible seating layouts",
+    experience: "Trusted venue team",
+  },
+  contact: {
+    phone: "+234 803 555 0198",
+    email: "hello@dgoldeventcentre.com",
+    address: "Egbeda, Lagos, Nigeria",
+    whatsapp: "+234 803 555 0198",
+  },
+  social: { instagram: "@dgoldeventcentre", facebook: "D Gold Event Centre" },
+};

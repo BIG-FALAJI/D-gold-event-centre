@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #17191c;
+
+  --ash: #5f6368;
+  --ash-dark: #36393d;
+  --ash-light: #e5e7e9;
+
+  --white: #ffffff;
+  --off-white: #f7f7f7;
+
+  --muted: #73777c;
+  --border: #e2e4e7;
+}
