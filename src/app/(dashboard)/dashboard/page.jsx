@@ -1,4 +1,4 @@
-import DashboardOverview from "@/components/dashboard/DashboardOverview";
+import DashboardOverview from "@/components/Dashboard/DashboardOverview";
 
 export const metadata = {
   title: "Dashboard | D Gold Event Centre",

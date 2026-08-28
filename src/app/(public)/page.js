@@ -2,7 +2,7 @@ import AboutPreview from "@/components/Home/AboutPreview";
 import AvailabilityCTA from "@/components/Home/AvailabilityCTA";
 import BookingCTA from "@/components/Home/BookingCTA";
 import GalleryPreview from "@/components/Home/GalleryPreview";
-import Hero from "@/components/home/Hero";
+import Hero from "@/components/Home/Hero";
 import PackagesPreview from "@/components/Home/PackagesPreview";
 import StatsSection from "@/components/Home/StatsSection";
 import Testimonials from "@/components/Home/Testimonials";
