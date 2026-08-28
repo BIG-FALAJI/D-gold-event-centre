@@ -1,9 +1,9 @@
-import AboutHero from "@/components/about/AboutHero";
-import AboutStory from "@/components/about/AboutStory";
-import AboutFeatures from "@/components/about/AboutFeatures";
-import AboutEvents from "@/components/about/AboutEvents";
-import AboutStats from "@/components/about/AboutStats";
-import AboutCTA from "@/components/about/AboutCTA";
+import AboutHero from "@/components/About/AboutHero";
+import AboutStory from "@/components/About/AboutStory";
+import AboutFeatures from "@/components/About/AboutFeatures";
+import AboutEvents from "@/components/About/AboutEvents";
+import AboutStats from "@/components/About/AboutStats";
+import AboutCTA from "@/components/About/AboutCTA";
 
 export const metadata = {
   title: "About | D Gold Event Centre",

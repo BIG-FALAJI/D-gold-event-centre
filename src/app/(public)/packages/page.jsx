@@ -1,7 +1,7 @@
-import PackagesHero from "@/components/packages/PackagesHero";
-import PackageList from "@/components/packages/PackageList";
-import PackageNote from "@/components/packages/PackageNote";
-import PackagesCTA from "@/components/packages/PackagesCTA";
+import PackagesHero from "@/components/Packages/PackagesHero";
+import PackageList from "@/components/Packages/PackageList";
+import PackageNote from "@/components/Packages/PackageNote";
+import PackagesCTA from "@/components/Packages/PackagesCTA";
 
 export const metadata = {
   title: "Packages | D Gold Event Centre",

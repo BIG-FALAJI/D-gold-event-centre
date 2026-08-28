@@ -1,8 +1,8 @@
-import VenueHero from "@/components/venue/VenueHero";
-import VenueOverview from "@/components/venue/VenueOverview";
-import VenueFeatures from "@/components/venue/VenueFeatures";
-import EventTypes from "@/components/venue/EventTypes";
-import VenueCTA from "@/components/venue/VenueCTA";
+import VenueHero from "@/components/Venue/VenueHero";
+import VenueOverview from "@/components/Venue/VenueOverview";
+import VenueFeatures from "@/components/Venue/VenueFeatures";
+import EventTypes from "@/components/Venue/EventTypes";
+import VenueCTA from "@/components/Venue/VenueCTA";
 
 export const metadata = {
   title: "Our Venue | D Gold Event Centre",

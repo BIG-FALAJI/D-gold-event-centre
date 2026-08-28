@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { FiCalendar, FiCheck } from "react-icons/fi";
-import BookingForm from "@/components/booking/BookingForm";
+import BookingForm from "@/components/Booking/BookingForm";
 
 function BookingPageContent() {
   const searchParams = useSearchParams();
@@ -100,5 +100,9 @@ function BookingPageContent() {
 }
 
 export default function BookingPage() {
-  return <Suspense fallback={<main className="min-h-screen bg-slate-100" />}><BookingPageContent /></Suspense>;
+  return (
+    <Suspense fallback={<main className="min-h-screen bg-slate-100" />}>
+      <BookingPageContent />
+    </Suspense>
+  );
 }

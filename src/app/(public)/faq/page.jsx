@@ -1,6 +1,6 @@
-import FAQHero from "@/components/faq/FAQHero";
-import FAQList from "@/components/faq/FAQList";
-import FAQCTA from "@/components/faq/FAQCTA";
+import FAQHero from "@/components/Faq/FAQHero";
+import FAQList from "@/components/Faq/FAQList";
+import FAQCTA from "@/components/Faq/FAQCTA";
 
 export const metadata = {
   title: "FAQ | D Gold Event Centre",

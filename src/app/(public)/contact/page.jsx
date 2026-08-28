@@ -1,7 +1,7 @@
-import ContactHero from "@/components/contact/ContactHero";
-import ContactInfo from "@/components/contact/ContactInfo";
-import ContactForm from "@/components/contact/ContactForm";
-import ContactLocation from "@/components/contact/ContactLocation";
+import ContactHero from "@/components/Contact/ContactHero";
+import ContactInfo from "@/components/Contact/ContactInfo";
+import ContactForm from "@/components/Contact/ContactForm";
+import ContactLocation from "@/components/Contact/ContactLocation";
 
 export const metadata = {
   title: "Contact | D Gold Event Centre",

@@ -1,5 +1,5 @@
-import AuthLayout from "@/components/auth/AuthLayout";
-import SignInForm from "@/components/auth/SignInForm";
+import AuthLayout from "@/components/Auth/AuthLayout";
+import SignInForm from "@/components/Auth/SignInForm";
 
 export const metadata = {
   title: "Sign In | D Gold Event Centre",

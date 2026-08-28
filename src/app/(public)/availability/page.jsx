@@ -1,4 +1,4 @@
-import AvailabilityCalendar from "@/components/availability/AvailabilityCalendar";
+import AvailabilityCalendar from "@/components/Availability/AvailabilityCalendar";
 
 export const metadata = {
   title: "Check Availability | D Gold Event Centre",

@@ -1,4 +1,4 @@
-import AdminGuard from "@/components/admin/AdminGuard";
+import AdminGuard from "@/components/Admin/AdminGuard";
 import { AdminProvider } from "@/components/Admin/AdminProvider";
 import AdminSidebar from "@/components/Admin/AdminSidebar";
 

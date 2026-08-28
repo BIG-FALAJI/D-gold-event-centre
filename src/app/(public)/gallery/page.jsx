@@ -1,6 +1,6 @@
-import GalleryHero from "@/components/gallery/GalleryHero";
-import GalleryGrid from "@/components/gallery/GalleryGrid";
-import GalleryCTA from "@/components/gallery/GalleryCTA";
+import GalleryHero from "@/components/Gallery/GalleryHero";
+import GalleryGrid from "@/components/Gallery/GalleryGrid";
+import GalleryCTA from "@/components/Gallery/GalleryCTA";
 
 export const metadata = {
   title: "Gallery | D Gold Event Centre",
