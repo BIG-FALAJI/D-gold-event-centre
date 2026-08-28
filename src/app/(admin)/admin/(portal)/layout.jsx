@@ -4,14 +4,14 @@ import AdminSidebar from "@/components/Admin/AdminSidebar";
 
 export default function AdminPortalLayout({ children }) {
   return (
-    <AdminProvider>
-      <AdminGuard>
+    <AdminGuard>
+      <AdminProvider>
         <div className="min-h-screen bg-slate-50">
           <AdminSidebar />
 
-          <main className="lg:pl-[268px]">{children}</main>
+          <main className="min-h-screen lg:pl-[268px]">{children}</main>
         </div>
-      </AdminGuard>
-    </AdminProvider>
+      </AdminProvider>
+    </AdminGuard>
   );
 }

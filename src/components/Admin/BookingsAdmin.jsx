@@ -1,12 +1,524 @@
 "use client";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { FiCheck, FiChevronLeft, FiChevronRight, FiEye, FiSearch, FiX } from "react-icons/fi";
+import {
+  FiCheck,
+  FiChevronLeft,
+  FiChevronRight,
+  FiEye,
+  FiSearch,
+  FiX,
+} from "react-icons/fi";
+
+import {
+  AdminButton,
+  AdminModal,
+  AdminPageHeader,
+  Notice,
+  StatusBadge,
+} from "./AdminUI";
 import { useAdmin } from "./AdminProvider";
-import { AdminButton, AdminModal, AdminPageHeader, Notice, StatusBadge } from "./AdminUI";
-const dateText = (date) => new Date(`${date}T00:00:00`).toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" });
+const dateText = (date) =>
+  new Date(`${date}T00:00:00`).toLocaleDateString("en-NG", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 const title = (value) => value.replace(/^./, (letter) => letter.toUpperCase());
-export function BookingActions({ booking, compact = false }) { const { bookings, update, flash } = useAdmin(); const [confirm, setConfirm] = useState(""); const change = (status) => { update("bookings", bookings.map((item) => item.id === booking.id ? { ...item, status } : item)); flash(`${booking.id} marked as ${title(status)}.`); setConfirm(""); }; const actions = booking.status === "pending" ? [["Confirm", "confirmed", "primary"], ["Reject", "rejected", "danger"]] : booking.status === "confirmed" ? [["Mark completed", "completed", "secondary"]] : []; return <><div className={`flex flex-wrap gap-2 ${compact ? "justify-end" : ""}`}><AdminButton href={`/admin/bookings/${booking.id}`} variant="secondary" className="px-3 py-2"><FiEye className="h-4 w-4" />{compact ? "" : "View booking"}</AdminButton>{actions.map(([label, status, variant]) => <AdminButton key={status} onClick={() => setConfirm(status)} variant={variant} className="px-3 py-2">{label}</AdminButton>)}</div>{confirm && <AdminModal title={`${title(confirm)} booking?`} onClose={() => setConfirm("")}><div className="p-5"><p className="text-sm leading-6 text-slate-600">This changes the status of {booking.id} for {booking.customer}. This prototype stores the update in this browser only.</p><div className="mt-6 flex justify-end gap-2"><AdminButton onClick={() => setConfirm("")} variant="secondary">Cancel</AdminButton><AdminButton onClick={() => change(confirm)} variant={confirm === "rejected" ? "danger" : "primary"}>{title(confirm)}</AdminButton></div></div></AdminModal>}</>; }
-export function BookingsPage() { const { bookings } = useAdmin(); const [search, setSearch] = useState(""); const [status, setStatus] = useState("all"); const [event, setEvent] = useState("all"); const filtered = useMemo(() => bookings.filter((b) => (status === "all" || b.status === status) && (event === "all" || b.event === event) && `${b.id} ${b.customer} ${b.event}`.toLowerCase().includes(search.toLowerCase())), [bookings, search, status, event]); const events = [...new Set(bookings.map((b) => b.event))]; return <><AdminPageHeader eyebrow="Bookings" title="All bookings" description={`${bookings.length} booking requests in your venue workspace.`} action={<AdminButton href="/booking">New booking</AdminButton>} /><div className="mx-auto max-w-7xl px-5 py-7 sm:px-8 lg:px-10"><div className="flex flex-col gap-3 border border-slate-200 bg-white p-4 md:flex-row"><label className="relative flex-1"><FiSearch className="absolute left-3 top-3 h-4 w-4 text-slate-400" /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by customer, event or reference" className="w-full border border-slate-200 py-2.5 pl-10 pr-3 text-sm outline-none focus:border-slate-500" /></label><select value={status} onChange={(e) => setStatus(e.target.value)} className="border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-600 outline-none focus:border-slate-500"><option value="all">All statuses</option>{["pending", "confirmed", "rejected", "completed"].map((item) => <option key={item} value={item}>{title(item)}</option>)}</select><select value={event} onChange={(e) => setEvent(e.target.value)} className="border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-600 outline-none focus:border-slate-500"><option value="all">All events</option>{events.map((item) => <option key={item}>{item}</option>)}</select></div><div className="mt-5 hidden overflow-x-auto border border-slate-200 bg-white md:block"><table className="w-full min-w-[940px] text-left"><thead className="bg-slate-50 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400"><tr>{["Reference", "Customer", "Event", "Date", "Guests", "Package", "Status", "Created", ""].map((label, index) => <th key={index} className="px-4 py-3">{label}</th>)}</tr></thead><tbody className="divide-y divide-slate-100">{filtered.map((b) => <tr key={b.id} className="hover:bg-slate-50"><td className="px-4 py-4 text-sm font-semibold text-slate-800"><Link href={`/admin/bookings/${b.id}`}>{b.id}</Link></td><td className="px-4 py-4 text-sm text-slate-700">{b.customer}</td><td className="px-4 py-4 text-sm text-slate-600">{b.event}</td><td className="px-4 py-4 text-sm text-slate-600">{dateText(b.date)}</td><td className="px-4 py-4 text-sm text-slate-600">{b.guests}</td><td className="px-4 py-4 text-sm text-slate-600">{b.package}</td><td className="px-4 py-4"><StatusBadge status={b.status} /></td><td className="px-4 py-4 text-sm text-slate-500">{dateText(b.created)}</td><td className="px-4 py-4"><BookingActions booking={b} compact /></td></tr>)}</tbody></table></div><div className="mt-5 space-y-3 md:hidden">{filtered.map((b) => <article key={b.id} className="border border-slate-200 bg-white p-4"><div className="flex items-start justify-between gap-3"><div><Link href={`/admin/bookings/${b.id}`} className="text-sm font-semibold text-slate-900">{b.id}</Link><p className="mt-1 text-sm text-slate-600">{b.customer}</p></div><StatusBadge status={b.status} /></div><div className="mt-4 grid grid-cols-2 gap-3 border-y border-slate-100 py-3 text-xs"><p className="text-slate-500"><span className="block text-slate-400">Event</span>{b.event}</p><p className="text-slate-500"><span className="block text-slate-400">Date</span>{dateText(b.date)}</p><p className="text-slate-500"><span className="block text-slate-400">Guests</span>{b.guests}</p><p className="text-slate-500"><span className="block text-slate-400">Package</span>{b.package}</p></div><div className="mt-3"><BookingActions booking={b} /></div></article>)}</div>{!filtered.length && <div className="mt-5 border border-dashed border-slate-300 bg-white px-6 py-14 text-center text-sm text-slate-500">No bookings match these filters.</div>}</div><Notice /></>; }
-export function BookingDetails({ id }) { const { bookings } = useAdmin(); const booking = bookings.find((item) => item.id === id); if (!booking) return <div className="p-10 text-center text-slate-500">Booking not found. <Link href="/admin/bookings" className="font-semibold text-slate-900">Back to bookings</Link></div>; return <><AdminPageHeader eyebrow={`Booking ${booking.id}`} title={booking.event} description={`Created ${dateText(booking.created)}`} action={<BookingActions booking={booking} />} /><div className="mx-auto max-w-5xl px-5 py-7 sm:px-8 lg:px-10"><Link href="/admin/bookings" className="mb-6 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900"><FiChevronLeft className="h-4 w-4" />Back to bookings</Link><div className="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]"><div className="space-y-6"><section className="border border-slate-200 bg-white"><div className="border-b border-slate-200 p-5"><h2 className="font-semibold text-slate-900">Customer</h2></div><dl className="grid gap-px bg-slate-100 sm:grid-cols-2"><div className="bg-white p-5"><dt className="text-xs text-slate-400">Full name</dt><dd className="mt-1 text-sm font-medium text-slate-800">{booking.customer}</dd></div><div className="bg-white p-5"><dt className="text-xs text-slate-400">Phone</dt><dd className="mt-1 text-sm font-medium text-slate-800">{booking.phone}</dd></div><div className="bg-white p-5 sm:col-span-2"><dt className="text-xs text-slate-400">Email</dt><dd className="mt-1 text-sm font-medium text-slate-800">{booking.email}</dd></div></dl></section><section className="border border-slate-200 bg-white"><div className="border-b border-slate-200 p-5"><h2 className="font-semibold text-slate-900">Event</h2></div><dl className="grid gap-px bg-slate-100 sm:grid-cols-2"><div className="bg-white p-5"><dt className="text-xs text-slate-400">Event date</dt><dd className="mt-1 text-sm font-medium text-slate-800">{dateText(booking.date)}</dd></div><div className="bg-white p-5"><dt className="text-xs text-slate-400">Number of guests</dt><dd className="mt-1 text-sm font-medium text-slate-800">{booking.guests} guests</dd></div><div className="bg-white p-5"><dt className="text-xs text-slate-400">Event type</dt><dd className="mt-1 text-sm font-medium text-slate-800">{booking.event}</dd></div><div className="bg-white p-5"><dt className="text-xs text-slate-400">Package</dt><dd className="mt-1 text-sm font-medium text-slate-800">{booking.package}</dd></div><div className="bg-white p-5 sm:col-span-2"><dt className="text-xs text-slate-400">Notes</dt><dd className="mt-1 text-sm leading-6 text-slate-700">{booking.notes}</dd></div></dl></section></div><aside className="h-fit border border-slate-200 bg-white"><div className="border-b border-slate-200 p-5"><h2 className="font-semibold text-slate-900">Booking</h2></div><dl className="space-y-5 p-5"><div><dt className="text-xs text-slate-400">Reference</dt><dd className="mt-1 text-sm font-semibold text-slate-800">{booking.id}</dd></div><div><dt className="text-xs text-slate-400">Current status</dt><dd className="mt-2"><StatusBadge status={booking.status} /></dd></div><div><dt className="text-xs text-slate-400">Created date</dt><dd className="mt-1 text-sm font-medium text-slate-800">{dateText(booking.created)}</dd></div></dl></aside></div></div><Notice /></>; }
-export function AvailabilityPage() { const { availability, update, flash } = useAdmin(); const [month, setMonth] = useState(new Date(2026, 8, 1)); const [selected, setSelected] = useState("2026-09-05"); const year = month.getFullYear(); const monthIndex = month.getMonth(); const firstDay = new Date(year, monthIndex, 1).getDay(); const dayCount = new Date(year, monthIndex + 1, 0).getDate(); const key = (day) => `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`; const changeStatus = (status) => { update("availability", { ...availability, [selected]: status === "available" ? undefined : status }); flash(`${dateText(selected)} is now ${status}.`); }; return <><AdminPageHeader eyebrow="Bookings" title="Availability" description="Set the venue status for each date. Changes are saved in this browser for the prototype." /><div className="mx-auto max-w-6xl px-5 py-7 sm:px-8 lg:px-10"><div className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]"><section className="border border-slate-200 bg-white p-5 sm:p-7"><div className="flex items-center justify-between border-b border-slate-200 pb-5"><h2 className="text-xl font-semibold text-slate-900">{month.toLocaleString("en-NG", { month: "long", year: "numeric" })}</h2><div className="flex gap-2"><button onClick={() => setMonth(new Date(year, monthIndex - 1, 1))} className="grid h-9 w-9 place-items-center border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Previous month"><FiChevronLeft /></button><button onClick={() => setMonth(new Date(year, monthIndex + 1, 1))} className="grid h-9 w-9 place-items-center border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Next month"><FiChevronRight /></button></div></div><div className="mt-5 grid grid-cols-7">{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => <span key={d} className="py-2 text-center text-[10px] font-semibold uppercase tracking-wider text-slate-400">{d}</span>)}{Array.from({ length: firstDay }).map((_, i) => <span key={`blank-${i}`} />)}{Array.from({ length: dayCount }, (_, i) => i + 1).map((day) => { const date = key(day); const status = availability[date] || "available"; const color = { available: "bg-white text-slate-700 hover:bg-slate-100", pending: "bg-amber-50 text-amber-700", booked: "bg-slate-900 text-white", blocked: "bg-red-50 text-red-700" }[status]; return <button key={date} onClick={() => setSelected(date)} className={`m-0.5 flex aspect-square flex-col items-center justify-center text-sm font-medium ${selected === date ? "ring-2 ring-slate-400 ring-offset-1" : ""} ${color}`}><span>{day}</span><span className={`mt-1 h-1 w-1 rounded-full ${status === "booked" ? "bg-white" : status === "pending" ? "bg-amber-500" : status === "blocked" ? "bg-red-500" : "bg-transparent"}`} /></button>; })}</div><div className="mt-6 flex flex-wrap gap-4 border-t border-slate-200 pt-5 text-xs text-slate-500">{["available", "pending", "booked", "blocked"].map((item) => <span key={item} className="flex items-center gap-2"><span className={`h-2.5 w-2.5 ${item === "available" ? "border border-slate-300" : item === "pending" ? "bg-amber-400" : item === "booked" ? "bg-slate-900" : "bg-red-400"}`} />{title(item)}</span>)}</div></section><aside className="h-fit border border-slate-200 bg-white"><div className="border-b border-slate-200 p-5"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Selected date</p><h2 className="mt-2 text-lg font-semibold text-slate-900">{dateText(selected)}</h2><div className="mt-3"><StatusBadge status={availability[selected] || "available"} /></div></div><div className="p-5"><p className="text-sm leading-6 text-slate-500">Set how this date should appear to your team and, later, to customers checking availability.</p><div className="mt-5 grid grid-cols-2 gap-2">{["available", "pending", "booked", "blocked"].map((status) => <AdminButton key={status} onClick={() => changeStatus(status)} variant={status === "blocked" ? "danger" : "secondary"} className="capitalize">{status}</AdminButton>)}</div></div></aside></div></div><Notice /></>; }
+export function BookingActions({ booking, compact = false }) {
+  const { bookings, update, flash } = useAdmin();
+  const [confirm, setConfirm] = useState("");
+  const change = (status) => {
+    update(
+      "bookings",
+      bookings.map((item) =>
+        item.id === booking.id ? { ...item, status } : item,
+      ),
+    );
+    flash(`${booking.id} marked as ${title(status)}.`);
+    setConfirm("");
+  };
+  const actions =
+    booking.status === "pending"
+      ? [
+          ["Confirm", "confirmed", "primary"],
+          ["Reject", "rejected", "danger"],
+        ]
+      : booking.status === "confirmed"
+        ? [["Mark completed", "completed", "secondary"]]
+        : [];
+  return (
+    <>
+      <div className={`flex flex-wrap gap-2 ${compact ? "justify-end" : ""}`}>
+        <AdminButton
+          href={`/admin/bookings/${booking.id}`}
+          variant="secondary"
+          className="px-3 py-2"
+        >
+          <FiEye className="h-4 w-4" />
+          {compact ? "" : "View booking"}
+        </AdminButton>
+        {actions.map(([label, status, variant]) => (
+          <AdminButton
+            key={status}
+            onClick={() => setConfirm(status)}
+            variant={variant}
+            className="px-3 py-2"
+          >
+            {label}
+          </AdminButton>
+        ))}
+      </div>
+      {confirm && (
+        <AdminModal
+          title={`${title(confirm)} booking?`}
+          onClose={() => setConfirm("")}
+        >
+          <div className="p-5">
+            <p className="text-sm leading-6 text-slate-600">
+              This changes the status of {booking.id} for {booking.customer}.
+              This prototype stores the update in this browser only.
+            </p>
+            <div className="mt-6 flex justify-end gap-2">
+              <AdminButton onClick={() => setConfirm("")} variant="secondary">
+                Cancel
+              </AdminButton>
+              <AdminButton
+                onClick={() => change(confirm)}
+                variant={confirm === "rejected" ? "danger" : "primary"}
+              >
+                {title(confirm)}
+              </AdminButton>
+            </div>
+          </div>
+        </AdminModal>
+      )}
+    </>
+  );
+}
+export function BookingsPage() {
+  const { bookings } = useAdmin();
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("all");
+  const [event, setEvent] = useState("all");
+  const filtered = useMemo(
+    () =>
+      bookings.filter(
+        (b) =>
+          (status === "all" || b.status === status) &&
+          (event === "all" || b.event === event) &&
+          `${b.id} ${b.customer} ${b.event}`
+            .toLowerCase()
+            .includes(search.toLowerCase()),
+      ),
+    [bookings, search, status, event],
+  );
+  const events = [...new Set(bookings.map((b) => b.event))];
+  return (
+    <>
+      <AdminPageHeader
+        eyebrow="Bookings"
+        title="All bookings"
+        description={`${bookings.length} booking requests in your venue workspace.`}
+        action={<AdminButton href="/booking">New booking</AdminButton>}
+      />
+      <div className="mx-auto max-w-7xl px-5 py-7 sm:px-8 lg:px-10">
+        <div className="flex flex-col gap-3 border border-slate-200 bg-white p-4 md:flex-row">
+          <label className="relative flex-1">
+            <FiSearch className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by customer, event or reference"
+              className="w-full border border-slate-200 py-2.5 pl-10 pr-3 text-sm outline-none focus:border-slate-500"
+            />
+          </label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-600 outline-none focus:border-slate-500"
+          >
+            <option value="all">All statuses</option>
+            {["pending", "confirmed", "rejected", "completed"].map((item) => (
+              <option key={item} value={item}>
+                {title(item)}
+              </option>
+            ))}
+          </select>
+          <select
+            value={event}
+            onChange={(e) => setEvent(e.target.value)}
+            className="border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-600 outline-none focus:border-slate-500"
+          >
+            <option value="all">All events</option>
+            {events.map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </div>
+        <div className="mt-5 hidden overflow-x-auto border border-slate-200 bg-white md:block">
+          <table className="w-full min-w-[940px] text-left">
+            <thead className="bg-slate-50 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+              <tr>
+                {[
+                  "Reference",
+                  "Customer",
+                  "Event",
+                  "Date",
+                  "Guests",
+                  "Package",
+                  "Status",
+                  "Created",
+                  "",
+                ].map((label, index) => (
+                  <th key={index} className="px-4 py-3">
+                    {label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filtered.map((b) => (
+                <tr key={b.id} className="hover:bg-slate-50">
+                  <td className="px-4 py-4 text-sm font-semibold text-slate-800">
+                    <Link href={`/admin/bookings/${b.id}`}>{b.id}</Link>
+                  </td>
+                  <td className="px-4 py-4 text-sm text-slate-700">
+                    {b.customer}
+                  </td>
+                  <td className="px-4 py-4 text-sm text-slate-600">
+                    {b.event}
+                  </td>
+                  <td className="px-4 py-4 text-sm text-slate-600">
+                    {dateText(b.date)}
+                  </td>
+                  <td className="px-4 py-4 text-sm text-slate-600">
+                    {b.guests}
+                  </td>
+                  <td className="px-4 py-4 text-sm text-slate-600">
+                    {b.package}
+                  </td>
+                  <td className="px-4 py-4">
+                    <StatusBadge status={b.status} />
+                  </td>
+                  <td className="px-4 py-4 text-sm text-slate-500">
+                    {dateText(b.created)}
+                  </td>
+                  <td className="px-4 py-4">
+                    <BookingActions booking={b} compact />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-5 space-y-3 md:hidden">
+          {filtered.map((b) => (
+            <article
+              key={b.id}
+              className="border border-slate-200 bg-white p-4"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <Link
+                    href={`/admin/bookings/${b.id}`}
+                    className="text-sm font-semibold text-slate-900"
+                  >
+                    {b.id}
+                  </Link>
+                  <p className="mt-1 text-sm text-slate-600">{b.customer}</p>
+                </div>
+                <StatusBadge status={b.status} />
+              </div>
+              <div className="mt-4 grid grid-cols-2 gap-3 border-y border-slate-100 py-3 text-xs">
+                <p className="text-slate-500">
+                  <span className="block text-slate-400">Event</span>
+                  {b.event}
+                </p>
+                <p className="text-slate-500">
+                  <span className="block text-slate-400">Date</span>
+                  {dateText(b.date)}
+                </p>
+                <p className="text-slate-500">
+                  <span className="block text-slate-400">Guests</span>
+                  {b.guests}
+                </p>
+                <p className="text-slate-500">
+                  <span className="block text-slate-400">Package</span>
+                  {b.package}
+                </p>
+              </div>
+              <div className="mt-3">
+                <BookingActions booking={b} />
+              </div>
+            </article>
+          ))}
+        </div>
+        {!filtered.length && (
+          <div className="mt-5 border border-dashed border-slate-300 bg-white px-6 py-14 text-center text-sm text-slate-500">
+            No bookings match these filters.
+          </div>
+        )}
+      </div>
+      <Notice />
+    </>
+  );
+}
+export function BookingDetails({ id }) {
+  const { bookings } = useAdmin();
+  const booking = bookings.find((item) => item.id === id);
+  if (!booking)
+    return (
+      <div className="p-10 text-center text-slate-500">
+        Booking not found.{" "}
+        <Link href="/admin/bookings" className="font-semibold text-slate-900">
+          Back to bookings
+        </Link>
+      </div>
+    );
+  return (
+    <>
+      <AdminPageHeader
+        eyebrow={`Booking ${booking.id}`}
+        title={booking.event}
+        description={`Created ${dateText(booking.created)}`}
+        action={<BookingActions booking={booking} />}
+      />
+      <div className="mx-auto max-w-5xl px-5 py-7 sm:px-8 lg:px-10">
+        <Link
+          href="/admin/bookings"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900"
+        >
+          <FiChevronLeft className="h-4 w-4" />
+          Back to bookings
+        </Link>
+        <div className="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
+          <div className="space-y-6">
+            <section className="border border-slate-200 bg-white">
+              <div className="border-b border-slate-200 p-5">
+                <h2 className="font-semibold text-slate-900">Customer</h2>
+              </div>
+              <dl className="grid gap-px bg-slate-100 sm:grid-cols-2">
+                <div className="bg-white p-5">
+                  <dt className="text-xs text-slate-400">Full name</dt>
+                  <dd className="mt-1 text-sm font-medium text-slate-800">
+                    {booking.customer}
+                  </dd>
+                </div>
+                <div className="bg-white p-5">
+                  <dt className="text-xs text-slate-400">Phone</dt>
+                  <dd className="mt-1 text-sm font-medium text-slate-800">
+                    {booking.phone}
+                  </dd>
+                </div>
+                <div className="bg-white p-5 sm:col-span-2">
+                  <dt className="text-xs text-slate-400">Email</dt>
+                  <dd className="mt-1 text-sm font-medium text-slate-800">
+                    {booking.email}
+                  </dd>
+                </div>
+              </dl>
+            </section>
+            <section className="border border-slate-200 bg-white">
+              <div className="border-b border-slate-200 p-5">
+                <h2 className="font-semibold text-slate-900">Event</h2>
+              </div>
+              <dl className="grid gap-px bg-slate-100 sm:grid-cols-2">
+                <div className="bg-white p-5">
+                  <dt className="text-xs text-slate-400">Event date</dt>
+                  <dd className="mt-1 text-sm font-medium text-slate-800">
+                    {dateText(booking.date)}
+                  </dd>
+                </div>
+                <div className="bg-white p-5">
+                  <dt className="text-xs text-slate-400">Number of guests</dt>
+                  <dd className="mt-1 text-sm font-medium text-slate-800">
+                    {booking.guests} guests
+                  </dd>
+                </div>
+                <div className="bg-white p-5">
+                  <dt className="text-xs text-slate-400">Event type</dt>
+                  <dd className="mt-1 text-sm font-medium text-slate-800">
+                    {booking.event}
+                  </dd>
+                </div>
+                <div className="bg-white p-5">
+                  <dt className="text-xs text-slate-400">Package</dt>
+                  <dd className="mt-1 text-sm font-medium text-slate-800">
+                    {booking.package}
+                  </dd>
+                </div>
+                <div className="bg-white p-5 sm:col-span-2">
+                  <dt className="text-xs text-slate-400">Notes</dt>
+                  <dd className="mt-1 text-sm leading-6 text-slate-700">
+                    {booking.notes}
+                  </dd>
+                </div>
+              </dl>
+            </section>
+          </div>
+          <aside className="h-fit border border-slate-200 bg-white">
+            <div className="border-b border-slate-200 p-5">
+              <h2 className="font-semibold text-slate-900">Booking</h2>
+            </div>
+            <dl className="space-y-5 p-5">
+              <div>
+                <dt className="text-xs text-slate-400">Reference</dt>
+                <dd className="mt-1 text-sm font-semibold text-slate-800">
+                  {booking.id}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs text-slate-400">Current status</dt>
+                <dd className="mt-2">
+                  <StatusBadge status={booking.status} />
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs text-slate-400">Created date</dt>
+                <dd className="mt-1 text-sm font-medium text-slate-800">
+                  {dateText(booking.created)}
+                </dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+      <Notice />
+    </>
+  );
+}
+export function AvailabilityPage() {
+  const { availability, update, flash } = useAdmin();
+  const [month, setMonth] = useState(new Date(2026, 8, 1));
+  const [selected, setSelected] = useState("2026-09-05");
+  const year = month.getFullYear();
+  const monthIndex = month.getMonth();
+  const firstDay = new Date(year, monthIndex, 1).getDay();
+  const dayCount = new Date(year, monthIndex + 1, 0).getDate();
+  const key = (day) =>
+    `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  const changeStatus = (status) => {
+    update("availability", {
+      ...availability,
+      [selected]: status === "available" ? undefined : status,
+    });
+    flash(`${dateText(selected)} is now ${status}.`);
+  };
+  return (
+    <>
+      <AdminPageHeader
+        eyebrow="Bookings"
+        title="Availability"
+        description="Set the venue status for each date. Changes are saved in this browser for the prototype."
+      />
+      <div className="mx-auto max-w-6xl px-5 py-7 sm:px-8 lg:px-10">
+        <div className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
+          <section className="border border-slate-200 bg-white p-5 sm:p-7">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-5">
+              <h2 className="text-xl font-semibold text-slate-900">
+                {month.toLocaleString("en-NG", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </h2>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setMonth(new Date(year, monthIndex - 1, 1))}
+                  className="grid h-9 w-9 place-items-center border border-slate-200 text-slate-600 hover:bg-slate-50"
+                  aria-label="Previous month"
+                >
+                  <FiChevronLeft />
+                </button>
+                <button
+                  onClick={() => setMonth(new Date(year, monthIndex + 1, 1))}
+                  className="grid h-9 w-9 place-items-center border border-slate-200 text-slate-600 hover:bg-slate-50"
+                  aria-label="Next month"
+                >
+                  <FiChevronRight />
+                </button>
+              </div>
+            </div>
+            <div className="mt-5 grid grid-cols-7">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+                <span
+                  key={d}
+                  className="py-2 text-center text-[10px] font-semibold uppercase tracking-wider text-slate-400"
+                >
+                  {d}
+                </span>
+              ))}
+              {Array.from({ length: firstDay }).map((_, i) => (
+                <span key={`blank-${i}`} />
+              ))}
+              {Array.from({ length: dayCount }, (_, i) => i + 1).map((day) => {
+                const date = key(day);
+                const status = availability[date] || "available";
+                const color = {
+                  available: "bg-white text-slate-700 hover:bg-slate-100",
+                  pending: "bg-amber-50 text-amber-700",
+                  booked: "bg-slate-900 text-white",
+                  blocked: "bg-red-50 text-red-700",
+                }[status];
+                return (
+                  <button
+                    key={date}
+                    onClick={() => setSelected(date)}
+                    className={`m-0.5 flex aspect-square flex-col items-center justify-center text-sm font-medium ${selected === date ? "ring-2 ring-slate-400 ring-offset-1" : ""} ${color}`}
+                  >
+                    <span>{day}</span>
+                    <span
+                      className={`mt-1 h-1 w-1 rounded-full ${status === "booked" ? "bg-white" : status === "pending" ? "bg-amber-500" : status === "blocked" ? "bg-red-500" : "bg-transparent"}`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+            <div className="mt-6 flex flex-wrap gap-4 border-t border-slate-200 pt-5 text-xs text-slate-500">
+              {["available", "pending", "booked", "blocked"].map((item) => (
+                <span key={item} className="flex items-center gap-2">
+                  <span
+                    className={`h-2.5 w-2.5 ${item === "available" ? "border border-slate-300" : item === "pending" ? "bg-amber-400" : item === "booked" ? "bg-slate-900" : "bg-red-400"}`}
+                  />
+                  {title(item)}
+                </span>
+              ))}
+            </div>
+          </section>
+          <aside className="h-fit border border-slate-200 bg-white">
+            <div className="border-b border-slate-200 p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+                Selected date
+              </p>
+              <h2 className="mt-2 text-lg font-semibold text-slate-900">
+                {dateText(selected)}
+              </h2>
+              <div className="mt-3">
+                <StatusBadge status={availability[selected] || "available"} />
+              </div>
+            </div>
+            <div className="p-5">
+              <p className="text-sm leading-6 text-slate-500">
+                Set how this date should appear to your team and, later, to
+                customers checking availability.
+              </p>
+              <div className="mt-5 grid grid-cols-2 gap-2">
+                {["available", "pending", "booked", "blocked"].map((status) => (
+                  <AdminButton
+                    key={status}
+                    onClick={() => changeStatus(status)}
+                    variant={status === "blocked" ? "danger" : "secondary"}
+                    className="capitalize"
+                  >
+                    {status}
+                  </AdminButton>
+                ))}
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+      <Notice />
+    </>
+  );
+}
