@@ -6,7 +6,7 @@ import AboutStats from "@/components/About/AboutStats";
 import AboutCTA from "@/components/About/AboutCTA";
 
 export const metadata = {
-  title: "About | D Gold Event Centre",
+  title: "About | D-Gold Event Centre",
   description:
     "Learn more about D Gold Event Centre, a versatile event venue in Egbeda, Lagos.",
 };
